@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <title>GoldProphet Intelligence Sim</title>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        :root { --gold: #FFD700; --bg: #0a0a0a; --panel: #161616; --green: #00ff88; --red: #ff4d4d; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        
+        header { background: var(--panel); padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .live-tag { background: var(--red); padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; animation: blink 1s infinite; }
+        
+        main { display: flex; flex: 1; overflow: hidden; }
+        #chart { flex: 3; position: relative; }
+        
+        #sidebar { flex: 1; background: var(--panel); border-left: 1px solid #333; padding: 15px; overflow-y: auto; font-size: 14px; }
+        .analyst-card { background: #222; padding: 10px; margin-bottom: 10px; border-left: 4px solid var(--gold); border-radius: 4px; }
+        .sentiment-bar { height: 4px; background: #333; margin-top: 5px; position: relative; }
+        .sentiment-fill { height: 100%; background: var(--green); width: 65%; transition: width 0.5s; }
+
+        @keyframes blink { 50% { opacity: 0; } }
+        @media (max-width: 768px) { main { flex-direction: column; } #sidebar { flex: none; height: 30vh; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <div><span class="live-tag">LIVE</span> <strong>GoldProphet</strong> <small>XAU/USD</small></div>
+    <div id="price-display" style="font-size: 20px; font-weight: bold;">$2050.00</div>
+</header>
+
+<main>
+    <div id="chart"></div>
+    <aside id="sidebar">
+        <h3>Intelligence Console</h3>
+        <div id="news-feed">
+            <div class="analyst-card">
+                <strong>Reuters Intelligence:</strong>
+                <p id="news-text">Analyzing global central bank inflows...</p>
+                <div class="sentiment-bar"><div id="sentiment-fill" class="sentiment-fill"></div></div>
+            </div>
+        </div>
+        <h4>Consolidated Analyst View</h4>
+        <div id="analyst-reports">
+            <div class="analyst-card" style="border-color: #00ff88;">J.P. Morgan: <strong>ACCUMULATE</strong></div>
+            <div class="analyst-card" style="border-color: #ffd700;">Goldman Sachs: <strong>NEUTRAL</strong></div>
+        </div>
+    </aside>
+</main>
+
+<script>
+    // --- CHART INITIALIZATION ---
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+        layout: { background: { color: '#0a0a0a' }, textColor: '#d1d4dc' },
+        grid: { vertLines: { color: '#1f1f1f' }, horzLines: { color: '#1f1f1f' } },
+        timeScale: { timeVisible: true, secondsVisible: true }
+    });
+
+    const candleSeries = chart.addCandlestickSeries({
+        upColor: '#00ff88', downColor: '#ff4d4d', borderVisible: false, wickUpColor: '#00ff88', wickDownColor: '#ff4d4d'
+    });
+
+    const predictionSeries = chart.addLineSeries({
+        color: 'rgba(255, 215, 0, 0.6)', lineStyle: 2, lineWidth: 2, title: '5s Lead'
+    });
+
+    // --- SIMULATION LOGIC ---
+    let currentPrice = 2050.00;
+    const headlines = [
+        "Fed signals potential rate pause", "Gold reserves hit 10-year high", 
+        "Global trade tensions rise", "Inflation data exceeds forecasts",
+        "Dollar weakens against major peers"
+    ];
+
+    setInterval(() => {
+        const volatility = 0.45;
+        const change = (Math.random() - 0.5) * volatility;
+        currentPrice += change;
+        const now = Math.floor(Date.now() / 1000);
+
+        // Update Real Chart (1s Refresh)
+        candleSeries.update({
+            time: now,
+            open: currentPrice - change,
+            high: currentPrice + Math.abs(change/2),
+            low: currentPrice - Math.abs(change/2),
+            close: currentPrice
+        });
+
+        // 5s Prediction Calculation (Simple AI Proxy)
+        const prediction = currentPrice + (change * 4.5);
+        predictionSeries.update({ time: now + 5, value: prediction });
+
+        // Update UI
+        document.getElementById('price-display').innerText = `$${currentPrice.toFixed(2)}`;
+        document.getElementById('price-display').style.color = change >= 0 ? '#00ff88' : '#ff4d4d';
+
+        // Rotate Intelligence Feed every 5 seconds
+        if (now % 5 === 0) {
+            document.getElementById('news-text').innerText = headlines[Math.floor(Math.random() * headlines.length)];
+            document.getElementById('sentiment-fill').style.width = Math.random() * 100 + "%";
+        }
+    }, 1000);
+
+    // --- PWA REGISTRATION ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+    }
+</script>
+</body>
+</html>

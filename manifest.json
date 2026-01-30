@@ -1,0 +1,15 @@
+{
+  "name": "GoldProphet Sim",
+  "short_name": "GoldSim",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#FFD700",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/272/272531.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

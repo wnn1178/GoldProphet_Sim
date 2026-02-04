@@ -20,3 +20,6 @@ if ! command -v "$PYTHON" >/dev/null 2>&1; then
  exit 1
 fi
 
+if [ ! -d "venv" ]; then
+ "$PYTHON" -m venv venv
+fi

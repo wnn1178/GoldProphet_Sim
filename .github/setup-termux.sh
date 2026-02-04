@@ -9,3 +9,9 @@ python main.py
 
 PYTHON="${PYTHON:-python3}"
 
+if [ -d "/data/data/com.termux" ] || [ -n "${PREFIX:-}" ] && [[ "$PREFIX" == /data/data/com.termux* ]]; then
+ echo "Detected Termux environment."
+ echo "If you haven't installed Python and build tools, run:"
+ echo " pkg update && pkg upgrade && pkg install python git clang make pkg-config"
+fi
+

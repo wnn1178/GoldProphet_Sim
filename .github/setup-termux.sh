@@ -15,3 +15,8 @@ if [ -d "/data/data/com.termux" ] || [ -n "${PREFIX:-}" ] && [[ "$PREFIX" == /da
  echo " pkg update && pkg upgrade && pkg install python git clang make pkg-config"
 fi
 
+if ! command -v "$PYTHON" >/dev/null 2>&1; then
+  echo "Error: $PYTHON not found. Install Python (e.g. in Termux: pkg install python) and retry."
+ exit 1
+fi
+

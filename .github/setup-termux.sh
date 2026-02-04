@@ -31,3 +31,5 @@ else
  echo "Error: venv activation script not found."
  exit 1
 fi
+
+python -m pip install --upgrade pip setuptools wheel

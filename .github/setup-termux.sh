@@ -6,3 +6,6 @@ source venv/bin/activate  # On Android use: venv\Scripts\activate
 pip install fastapi uvicorn transformers torch websockets
 #running the app
 python main.py
+
+PYTHON="${PYTHON:-python3}"
+

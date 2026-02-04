@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 Hu# 1. Create and activate a virtual environment (optional but recommended)
 python -m venv venv
 source venv/bin/activate  # On Android use: venv\Scripts\activate

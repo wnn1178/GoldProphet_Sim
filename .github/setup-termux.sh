@@ -25,3 +25,9 @@ if [ ! -d "venv" ]; then
 fi
 
 if [ -f "venv/bin/activate" ]; then
+
+source venv/bin/activate
+else
+ echo "Error: venv activation script not found."
+ exit 1
+fi
